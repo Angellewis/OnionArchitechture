@@ -1,4 +1,5 @@
 using GenericApi.Model.Contexts;
+using GenericApi.Model.IoC;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +30,8 @@ namespace GenericApi
         {
             services.AddDbContext<WorkShopContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddModelRegistry();
 
             services.AddControllers();
         }
