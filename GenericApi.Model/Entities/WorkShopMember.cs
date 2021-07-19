@@ -8,20 +8,11 @@ namespace GenericApi.Model.Entities
 {
     public class WorkShopMember : BaseEntity
     {
-        public string Name { get; set; }
-        public string MiddleName { get; set; }
-        public string LastName { get; set; }
-        public string SecondLastName { get; set; }
-        public WorkShopMemberDocumentType DocumentType { get; set; }
-        public string DocumentTypeValue { get; set; }
-        public Gender Gender { get; set; }
-        public DateTime? Dob { get; set; }
-
-        public int? PhotoId { get; set; }
-        public virtual Document Photo { get; set; }
-
-        public virtual ICollection<WorkShop> WorkShops { get; set; }
-
+        public WorkShopMemberRole Role { get; set; }
+        public int WorkShopId { get; set; }
+        public int MemberId { get; set; }
+        public virtual WorkShop WorkShop { get; set; }
+        public virtual Member Member { get; set; }
     }
 
 }

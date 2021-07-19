@@ -19,7 +19,5 @@ namespace GenericApi.Model.Entities
         public string ContentSupport { get; set; }
         public virtual ICollection<WorkShopDay> Days { get; set; }
         public virtual ICollection<WorkShopMember> Members { get; set; }
-
-
     }
 }

@@ -15,7 +15,7 @@ namespace GenericApi.Model.Extensions
             SetSoftDeleteFilterMethod.MakeGenericMethod(entityType).Invoke(null, new object[] { modelBuilder });
         }
 
-        static readonly MethodInfo SetSoftDeleteFilterMethod = typeof(EntityFrameworkExtensions)
+        static readonly MethodInfo SetSoftDeleteFilterMethod = typeof(EntityFrameworkModelBuilderExtensions)
             .GetMethods(BindingFlags.Public | BindingFlags.Static)
             .Single(t => t.IsGenericMethod && t.Name == "SetSoftDeleteFilter");
 
