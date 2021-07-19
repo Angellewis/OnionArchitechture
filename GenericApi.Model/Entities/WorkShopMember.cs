@@ -19,6 +19,9 @@ namespace GenericApi.Model.Entities
 
         public int? PhotoId { get; set; }
         public virtual Document Photo { get; set; }
+
+        public virtual ICollection<WorkShop> WorkShops { get; set; }
+
     }
 
 }
