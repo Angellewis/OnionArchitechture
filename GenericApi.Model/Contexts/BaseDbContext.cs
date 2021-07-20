@@ -60,7 +60,6 @@ namespace GenericApi.Model.Contexts
                 }
             }
         }
-
         public override int SaveChanges()
         {
             SetAuditEntities();
