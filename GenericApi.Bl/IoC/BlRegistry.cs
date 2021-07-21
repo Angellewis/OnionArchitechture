@@ -10,7 +10,7 @@ namespace GenericApi.Bl.IoC
 {
     public static class BlRegistry
     {
-        public static void AddModelRegistry(this IServiceCollection services)
+        public static void AddBlRegistry(this IServiceCollection services)
         {
             
         }

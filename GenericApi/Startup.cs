@@ -1,3 +1,4 @@
+using GenericApi.Bl.IoC;
 using GenericApi.Config;
 using GenericApi.Model.Contexts;
 using GenericApi.Model.IoC;
@@ -27,11 +28,12 @@ namespace GenericApi
             services.AddDbContext<WorkShopContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddControllers().AddAppFluentValidation();
+            services.AddControllers().AddValidation();
             
             #region Registries
 
             services.AddModelRegistry();
+            services.AddBlRegistry();
             services.AddServiceRegistry();
 
             #endregion
