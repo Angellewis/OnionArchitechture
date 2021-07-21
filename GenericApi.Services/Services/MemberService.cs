@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using GenericApi.Bl.Dto;
 using GenericApi.Model.Entities;
 using GenericApi.Model.Repositories;
@@ -13,7 +14,10 @@ namespace GenericApi.Services.Services
     public interface IMemberService : IBaseService<Member, MemberDto>  {}
     public class MemberService : BaseService<Member, MemberDto>, IMemberService
     {
-        public MemberService(IMemberRepository repository, IMapper mapper) : base(repository,mapper)
+        public MemberService(
+            IMemberRepository repository, 
+            IMapper mapper, 
+            IValidator<MemberDto> validator) : base(repository,mapper, validator)
         {
         }
     }

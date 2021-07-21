@@ -1,3 +1,4 @@
+using GenericApi.Config;
 using GenericApi.Model.Contexts;
 using GenericApi.Model.IoC;
 using GenericApi.Services.IoC;
@@ -26,12 +27,21 @@ namespace GenericApi
             services.AddDbContext<WorkShopContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddControllers().AddAppFluentValidation();
+            
+            #region Registries
+
             services.AddModelRegistry();
             services.AddServiceRegistry();
 
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            #endregion
 
-            services.AddControllers();
+            #region External Libraries
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddSwagger();
+
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +51,8 @@ namespace GenericApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseAppSwagger();
 
             app.UseHttpsRedirection();
 
