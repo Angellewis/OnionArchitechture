@@ -1,15 +1,16 @@
 using GenericApi.Bl.Config;
 using GenericApi.Config;
-using GenericApi.Model.Contexts;
 using GenericApi.Model.IoC;
 using GenericApi.Services.IoC;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
+using Microsoft.Net.Http.Headers;
+using System.Linq;
 
 namespace GenericApi
 {
@@ -28,9 +29,11 @@ namespace GenericApi
             #region External Dependencies Configs
 
             services.ConfigSqlServerDbContext(Configuration.GetConnectionString("DefaultConnection"));
-            services.AddControllers().ConfigFluentValidation();
+            services.AddControllers(options=> options.EnableEndpointRouting = false)
+                .ConfigFluentValidation();
             services.ConfigAutoMapper();
-            
+            services.AddAppOData();
+
             #endregion
 
             #region Api Libraries
@@ -63,10 +66,7 @@ namespace GenericApi
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseMvc(routeBuilder => routeBuilder.UseAppOData());
         }
     }
 }

@@ -1,27 +1,50 @@
 ﻿using GenericApi.Bl.Dto;
+using GenericApi.Core.BaseModel;
+using GenericApi.Filters;
 using GenericApi.Services.Services;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace GenericApi.Controllers
 {
+    public interface IBaseController<TEntity, TDto>
+    {
+        IBaseService<TEntity, TDto> _service { get; }
+    }
     [ApiController]
     [Route("[controller]")]
-    public class BaseController<TEntity,TDto> : ControllerBase
+    public class BaseController<TEntity,TDto> : ControllerBase , IBaseController<TEntity, TDto>
+        where TEntity : IBase 
+        where TDto : IBaseDto
     {
-        protected readonly IBaseService<TEntity,TDto> _service;
+        public IBaseService<TEntity, TDto> _service { get; }
         public BaseController(IBaseService<TEntity, TDto> service)
         {
             _service = service;
         }
+
+        //TODO: refactor this method to return dto
         [HttpGet]
-        public virtual async Task<IActionResult> Get()
+        [EnableQuery]
+        public virtual IActionResult Get()
         {
-            var list = await _service.GetAllAsync();
-            return Ok(list);
+            var query = _service.AsQuery();
+            return Ok(query);
+        }
+
+        [HttpGet("Query")]
+        public virtual async Task<IActionResult> Query(ODataQueryOptions<TEntity> queryOptions)
+        {
+            var query = _service.AsQuery();
+            var odataQuery = queryOptions.ApplyTo(query).Cast<TEntity>();
+            var result = await _service.ProjectToDto(odataQuery);
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
@@ -30,7 +53,7 @@ namespace GenericApi.Controllers
             var result = await _service.GetByIdAsync(id);
 
             if (result is null)
-                return NotFound();
+                return NotFound($"The record with id {id} was not found");
 
             return Ok(result);
         }
@@ -41,9 +64,9 @@ namespace GenericApi.Controllers
             var result = await _service.AddAsync(dto);
 
             if (result.IsSuccess is false)
-                return BadRequest(result);
+                return UnprocessableEntity(result);
 
-            return Ok(result);
+            return CreatedAtAction(WebRequestMethods.Http.Get, new { id = result.Entity.Id }, result.Entity);
         }
 
         [HttpPut("{id}")]
@@ -53,6 +76,9 @@ namespace GenericApi.Controllers
 
             if (result is null)
                 return NotFound($"The record with id {id} was not found");
+
+            if (result.IsSuccess is false)
+                return UnprocessableEntity(result);
 
             return Ok(result);
         }
