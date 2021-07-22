@@ -1,6 +1,5 @@
 ﻿using GenericApi.Bl.Dto;
 using GenericApi.Core.BaseModel;
-using GenericApi.Filters;
 using GenericApi.Services.Services;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
@@ -13,17 +12,13 @@ using System.Threading.Tasks;
 
 namespace GenericApi.Controllers
 {
-    public interface IBaseController<TEntity, TDto>
-    {
-        IBaseService<TEntity, TDto> _service { get; }
-    }
     [ApiController]
     [Route("[controller]")]
-    public class BaseController<TEntity,TDto> : ControllerBase , IBaseController<TEntity, TDto>
+    public class BaseController<TEntity,TDto> : ControllerBase
         where TEntity : IBase 
         where TDto : IBaseDto
     {
-        public IBaseService<TEntity, TDto> _service { get; }
+        protected readonly IBaseService<TEntity, TDto> _service;
         public BaseController(IBaseService<TEntity, TDto> service)
         {
             _service = service;
