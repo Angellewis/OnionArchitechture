@@ -1,4 +1,4 @@
-using GenericApi.Bl.IoC;
+using GenericApi.Bl.Config;
 using GenericApi.Config;
 using GenericApi.Model.Contexts;
 using GenericApi.Model.IoC;
@@ -25,23 +25,24 @@ namespace GenericApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<WorkShopContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            #region External Dependencies Configs
 
-            services.AddControllers().AddValidation();
+            services.ConfigSqlServerDbContext(Configuration.GetConnectionString("DefaultConnection"));
+            services.AddControllers().ConfigFluentValidation();
+            services.ConfigAutoMapper();
             
-            #region Registries
+            #endregion
 
-            services.AddModelRegistry();
-            services.AddBlRegistry();
-            services.AddServiceRegistry();
+            #region Api Libraries
+
+            services.AddSwagger();
 
             #endregion
 
-            #region External Libraries
+            #region App Registries
 
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddSwagger();
+            services.AddModelRegistry();
+            services.AddServiceRegistry();
 
             #endregion
         }

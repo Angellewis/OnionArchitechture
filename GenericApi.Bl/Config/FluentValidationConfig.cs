@@ -1,19 +1,15 @@
-﻿using FluentValidation;
-using FluentValidation.AspNetCore;
+﻿using FluentValidation.AspNetCore;
 using GenericApi.Bl.Validations;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace GenericApi.Config
+namespace GenericApi.Bl.Config
 {
     public static class FluentValidationConfig
     {
-        public static IMvcBuilder AddValidation(this IMvcBuilder builder)
+        public static IMvcBuilder ConfigFluentValidation(this IMvcBuilder builder)
         {
             builder.AddFluentValidation(x =>
             {
