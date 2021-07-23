@@ -1,11 +1,8 @@
-﻿using GenericApi.Bl.Dto;
-using GenericApi.Core.BaseModel;
+﻿using GenericApi.Core.BaseModel;
 using GenericApi.Services.Services;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
