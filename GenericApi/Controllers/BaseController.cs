@@ -2,6 +2,7 @@
 using GenericApi.Services.Services;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Net;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace GenericApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class BaseController<TEntity,TDto> : ControllerBase

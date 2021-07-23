@@ -6,7 +6,7 @@ using System.Text;
 
 namespace GenericApi.Bl.Validations
 {
-    public class MemberValidator : AbstractValidator<MemberDto>
+    public class MemberValidator : AbstractValidator<UserDto>
     {
 		public MemberValidator()
 		{

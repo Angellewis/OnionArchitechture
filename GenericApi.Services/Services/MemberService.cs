@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace GenericApi.Services.Services
 { 
-    public interface IMemberService : IBaseService<Member, MemberDto>  {}
-    public class MemberService : BaseService<Member, MemberDto>, IMemberService
+    public interface IUserService : IBaseService<User, UserDto>  {}
+    public class MemberService : BaseService<User, UserDto>, IUserService
     {
         public MemberService(
-            IMemberRepository repository, 
+            IUserRepository repository, 
             IMapper mapper, 
-            IValidator<MemberDto> validator) : base(repository,mapper, validator)
+            IValidator<UserDto> validator) : base(repository, mapper, validator)
         {
         }
     }

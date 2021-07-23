@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 
 namespace GenericApi.Model.Repositories
 {
-    public interface IMemberRepository : IBaseRepository<Member> {}
-    public class MemberRepository : BaseRepository<Member>, IMemberRepository
+    public interface IUserRepository : IBaseRepository<User> {}
+    public class UserRepository : BaseRepository<User>, IUserRepository
     {
-        public MemberRepository(WorkShopContext context) : base(context)
+        public UserRepository(WorkShopContext context) : base(context)
         {
         }
     }
