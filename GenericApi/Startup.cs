@@ -33,6 +33,7 @@ namespace GenericApi
                 .ConfigFluentValidation();
             services.ConfigAutoMapper();
             services.AddAppOData();
+            services.ConfigSerilog();
 
             #endregion
 
