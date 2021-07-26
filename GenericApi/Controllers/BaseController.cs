@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace GenericApi.Controllers
 {
-    [Authorize]
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class BaseController<TEntity,TDto> : ControllerBase
         where TEntity : IBase 

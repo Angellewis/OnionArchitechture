@@ -11,7 +11,7 @@ namespace GenericApi.Services.IoC
         public static void AddServiceRegistry(this IServiceCollection services)
         {
             services.AddScoped<IDocumentService, DocumentService>();
-            services.AddScoped<IUserService, MemberService>();
+            services.AddScoped<IUserService, UserService>();
         }
     }
 }
