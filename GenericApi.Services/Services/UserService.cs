@@ -34,17 +34,20 @@ namespace GenericApi.Services.Services
         public async Task<AuthenticateResponseDto> GetToken(AuthenticateRequestDto model)
         {
             var user = await _repository.Query()
-                .Where(x => x.UserName == model.UserName && x.Password == model.Password)
+                .Where(x => x.UserName == model.UserName)
                 .Select(x=> new { 
                     x.Id,
                     x.UserName,
                     x.Name,
-                    x.LastName
+                    x.LastName,
+                    x.Password
                 })
                 .FirstOrDefaultAsync();
 
             if (user is null)
                 return null;
+
+            //TODO: Validate password
 
             var response = new AuthenticateResponseDto
             {
@@ -93,5 +96,7 @@ namespace GenericApi.Services.Services
 
             return token;
         }
+
+
     }
 }
