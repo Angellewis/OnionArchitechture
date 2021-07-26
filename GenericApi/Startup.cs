@@ -32,7 +32,7 @@ namespace GenericApi
         public void ConfigureServices(IServiceCollection services)
         {
 
-            #region Settings
+            #region App Settings
 
             services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
 
@@ -57,26 +57,21 @@ namespace GenericApi
 
             #endregion
 
-            #region External Dependencies Configs
+            #region External Dependencies
 
             services.ConfigSqlServerDbContext(Configuration.GetConnectionString("DefaultConnection"));
             services.AddControllers(options=> options.EnableEndpointRouting = false)
                 .ConfigFluentValidation();
             services.ConfigAutoMapper();
-            services.AddAppOData();
             services.ConfigSerilog();
 
             #endregion
 
-            #region Authentication
+            #region API Libraries
 
-            services.AddJwtAuth(Configuration);
-
-            #endregion
-
-            #region Api Libraries
-
-            services.AddSwagger();
+            services.ConfigJwtAuth(Configuration);
+            services.ConfigOData();
+            services.ConfigSwagger();
 
             #endregion
 

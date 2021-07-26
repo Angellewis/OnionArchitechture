@@ -12,7 +12,7 @@ namespace GenericApi.Config
 {
     public static class JwtBearerAuthConfig
     {
-        public static IServiceCollection AddJwtAuth(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection ConfigJwtAuth(this IServiceCollection services, IConfiguration configuration)
         {
             var key = Encoding.ASCII.GetBytes(configuration["JwtSettings:Key"]);
 

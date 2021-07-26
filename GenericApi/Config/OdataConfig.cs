@@ -15,7 +15,7 @@ namespace GenericApi.Config
 {
     public static class OdataConfig
     {
-        public static IServiceCollection AddAppOData(this IServiceCollection services)
+        public static IServiceCollection ConfigOData(this IServiceCollection services)
         {
             services.AddOData();
             services.AddMvcCore(options =>
