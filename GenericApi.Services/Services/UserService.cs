@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using GenericApi.Bl.Dto;
+using GenericApi.Bl.Extensions;
+using GenericApi.Core.Abstract;
 using GenericApi.Core.Settings;
 using GenericApi.Model.Entities;
 using GenericApi.Model.Repositories;
@@ -47,7 +49,10 @@ namespace GenericApi.Services.Services
             if (user is null)
                 return null;
 
-            //TODO: Validate password
+            var isValidPassword = ValidatePassword(user.Password, model.Password);
+
+            if (isValidPassword is false)
+                return null;
 
             var response = new AuthenticateResponseDto
             {
@@ -61,6 +66,38 @@ namespace GenericApi.Services.Services
 
             return response;
         }
+
+        public override async Task<IEntityOperationResult<UserDto>> AddAsync(UserDto dto)
+        {
+            var validationResult = _validator.Validate(dto);
+
+            if (validationResult.IsValid is false)
+                return validationResult.ToOperationResult<UserDto>();
+
+            var entity = _mapper.Map<User>(dto);
+
+            entity.Password = EncodePassword(dto.Password);
+
+            var entityResult = await _repository.Add(entity);
+
+            _mapper.Map(entityResult, dto);
+
+            var result = dto.ToOperationResult();
+            return result;
+        }
+
+        private bool ValidatePassword(string passwordHash, string password)
+        {
+            bool verified = BCrypt.Net.BCrypt.Verify(password, passwordHash);
+            return verified;
+        }
+
+        private string EncodePassword(string password)
+        {
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
+            return passwordHash;
+        }
+
         private string GenerateJwtToken(AuthenticateResponseDto user)
         {
             var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
