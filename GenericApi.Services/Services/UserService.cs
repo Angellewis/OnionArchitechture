@@ -18,16 +18,17 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace GenericApi.Services.Services
-{ 
-    public interface IUserService : IBaseService<User, UserDto>  {
+{
+    public interface IUserService : IBaseService<User, UserDto>
+    {
         Task<AuthenticateResponseDto> GetToken(AuthenticateRequestDto model);
     }
     public class UserService : BaseService<User, UserDto>, IUserService
     {
         private readonly JwtSettings _jwtSettings;
         public UserService(
-            IUserRepository repository, 
-            IMapper mapper, 
+            IUserRepository repository,
+            IMapper mapper,
             IValidator<UserDto> validator, IOptions<JwtSettings> jwtSettings) : base(repository, mapper, validator)
         {
             _jwtSettings = jwtSettings.Value;
@@ -37,7 +38,8 @@ namespace GenericApi.Services.Services
         {
             var user = await _repository.Query()
                 .Where(x => x.UserName == model.UserName)
-                .Select(x=> new { 
+                .Select(x => new
+                {
                     x.Id,
                     x.UserName,
                     x.Name,
@@ -106,7 +108,7 @@ namespace GenericApi.Services.Services
 
             var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256Signature);
 
-            var claimsIdentity = new ClaimsIdentity(new[] { 
+            var claimsIdentity = new ClaimsIdentity(new[] {
                 new Claim("id", user.Id.ToString()),
                 new Claim("username",user.UserName)
             });
@@ -117,7 +119,7 @@ namespace GenericApi.Services.Services
                 { "lastName", user.LastName },
             };
 
-            var description  = new SecurityTokenDescriptor
+            var description = new SecurityTokenDescriptor
             {
                 Subject = claimsIdentity,
                 Claims = claims,

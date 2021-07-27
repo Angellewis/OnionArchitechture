@@ -1,16 +1,8 @@
 ﻿using GenericApi.Bl.Dto;
 using GenericApi.Model.Entities;
 using GenericApi.Services.Services;
-using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GenericApi.Controllers
