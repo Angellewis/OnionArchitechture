@@ -29,7 +29,8 @@ namespace GenericApi.Services.Services
         public UserService(
             IUserRepository repository,
             IMapper mapper,
-            IValidator<UserDto> validator, IOptions<JwtSettings> jwtSettings) : base(repository, mapper, validator)
+            IValidator<UserDto> validator, 
+            IOptions<JwtSettings> jwtSettings) : base(repository, mapper, validator)
         {
             _jwtSettings = jwtSettings.Value;
         }
@@ -135,7 +136,5 @@ namespace GenericApi.Services.Services
 
             return token;
         }
-
-
     }
 }
