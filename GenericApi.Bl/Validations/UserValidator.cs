@@ -6,11 +6,11 @@ using System.Text;
 
 namespace GenericApi.Bl.Validations
 {
-    public class MemberValidator : AbstractValidator<UserDto>
+    public class UserValidator : AbstractValidator<UserDto>
     {
-		public MemberValidator()
+		public UserValidator()
 		{
-			
+			RuleFor(x => x.Name).NotEmpty().WithMessage("User's Name is required");
 		}
 	}
 }
