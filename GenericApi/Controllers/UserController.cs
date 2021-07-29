@@ -29,11 +29,10 @@ namespace GenericApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost]
+        [HttpPost("RegisterUser")]
         public override async Task<IActionResult> Post([FromBody] UserDto dto)
         {
             return await base.Post(dto);
         }
-
     }
 }

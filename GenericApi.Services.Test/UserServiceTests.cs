@@ -176,7 +176,7 @@ namespace GenericApi.Services.Test
 
             var model = new AuthenticateRequestDto
             {
-                UserName = "maryelinram",
+                UserName = "Angelito84",
                 Password = "Hola1234"
             };
 
