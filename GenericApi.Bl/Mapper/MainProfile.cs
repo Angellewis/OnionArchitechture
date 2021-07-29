@@ -17,6 +17,9 @@ namespace GenericApi.Bl.Mapper
                 .ForMember(dto => dto.PhotoFileName, config => config.MapFrom(entity => entity.Photo.FileName));
             
             CreateMap<UserDto, User>();
+            CreateMap<WorkShop, WorkShopDto>().ReverseMap();
+            CreateMap<WorkShopDay, WorkShopDayDto>().ReverseMap();
+            CreateMap<WorkShopMember, WorkShopMember>().ReverseMap();
         }
     }
 }
