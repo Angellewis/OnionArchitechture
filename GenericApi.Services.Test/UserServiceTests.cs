@@ -2,14 +2,12 @@ using AutoMapper;
 using GenericApi.Bl.Dto;
 using GenericApi.Bl.Mapper;
 using GenericApi.Bl.Validations;
-using GenericApi.Core.Abstract;
 using GenericApi.Core.Settings;
 using GenericApi.Model.Contexts;
 using GenericApi.Model.Repositories;
 using GenericApi.Services.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Moq;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -54,48 +52,8 @@ namespace GenericApi.Services.Test
 
             #endregion
 
-            _userService = new UserService(
-                respository,
-                mapper,
-                validator,
-                settings);
-
+            _userService = new UserService(respository, mapper, validator, settings);
         }
-
-        //[Fact]
-        //public void ShouldSaveUserUsingMock()
-        //{
-        //    //Arrange
-        //    var _userServiceMock = new Mock<IUserService>();
-
-        //    var userToSave = new UserDto
-        //    {
-        //        Name = "Emmanuel",
-        //        MiddleName = "Enrique",
-        //        LastName = "Jimenez",
-        //        SecondLastName = "Pimentel",
-        //        Dob = new System.DateTime(1996, 06, 16),
-        //        DocumentType = Core.Enums.DocumentType.ID,
-        //        DocumentTypeValue = "22500851658",
-        //        Gender = Core.Enums.Gender.MALE,
-        //        UserName = "emmanuel",
-        //        Password = "Hola1234,"
-        //    };
-
-        //    IEntityOperationResult<UserDto> result = null;
-
-        //    _userServiceMock.Setup(x => x.AddAsync(It.IsAny<UserDto>()).Result)
-        //        .Callback<IEntityOperationResult<UserDto>>(userDto => result = userDto);
-
-        //    _userService.AddAsync(userToSave);
-
-        //    _userServiceMock.Verify(x => x.AddAsync(It.IsAny<UserDto>()), Times.Once);
-
-        //    Assert.True(result.IsSuccess);
-        //    Assert.NotNull(result.Entity);
-        //    Assert.Empty(result.Errors);
-        //    Assert.Equal(userToSave.Gender, result.Entity.Gender);
-        //}
 
         [Fact]
         public async Task ShouldSaveUserAsync()
@@ -116,12 +74,12 @@ namespace GenericApi.Services.Test
             };
 
             //Act
-            var operationResult = await _userService.AddAsync(requestDto);
+            var result = await _userService.AddAsync(requestDto);
 
             //Assert
-            Assert.True(operationResult.IsSuccess, operationResult.Errors.FirstOrDefault());
-            Assert.NotNull(operationResult.Entity);
-            Assert.Empty(operationResult.Errors);
+            Assert.True(result.IsSuccess, result.Errors.FirstOrDefault());
+            Assert.NotNull(result.Entity);
+            Assert.Empty(result.Errors);
         }
     }
 }
