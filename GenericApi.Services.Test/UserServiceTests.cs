@@ -1,12 +1,14 @@
 using AutoMapper;
 using FluentValidation;
 using GenericApi.Bl.Dto;
+using GenericApi.Bl.Validations;
 using GenericApi.Core.Settings;
 using GenericApi.Model.Entities;
 using GenericApi.Model.Repositories;
 using GenericApi.Services.Services;
 using Microsoft.Extensions.Options;
 using Moq;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -16,13 +18,11 @@ namespace GenericApi.Services.Test
     {
         private IUserService _userService;
 
-        [Fact]
-        public async Task ShouldSaveUserAsync()
+        [Theory]
+        [InlineData("Hola1234,")]
+        public async Task ShouldSaveUserAsync(string password)
         {
             #region Arrange
-
-            const string password = "Hola1234,";
-
             var dto = new UserDto
             {
                 Name = "Emmanuel",
@@ -53,6 +53,7 @@ namespace GenericApi.Services.Test
                 {
                     user.Id = 1;
                     user.Password = x.Password;
+                    user.CreatedDate = System.DateTimeOffset.UtcNow;
                 })
                 .ReturnsAsync(user);
 
@@ -62,6 +63,7 @@ namespace GenericApi.Services.Test
                 {
                     dto.Id = x.Id;
                     dto.Password = x.Password;
+                    dto.CreatedDate = x.CreatedDate;
                 })
                 .Returns(dto);
 
@@ -79,12 +81,12 @@ namespace GenericApi.Services.Test
             //Act
             var result = await _userService.AddAsync(dto);
 
-
             //Assert
-            Assert.True(result.IsSuccess);
+            Assert.True(result.IsSuccess, result.Errors.FirstOrDefault());
             Assert.Equal(result.Entity, dto);
             Assert.Equal(result.Entity.UserName, user.UserName);
             Assert.NotEqual(result.Entity.Password, password);
+            Assert.Equal(result.Entity.CreatedDate, user.CreatedDate);
         }
     }
 }
