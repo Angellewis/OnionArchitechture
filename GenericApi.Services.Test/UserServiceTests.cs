@@ -1,14 +1,12 @@
 using AutoMapper;
+using FluentValidation;
 using GenericApi.Bl.Dto;
-using GenericApi.Bl.Mapper;
-using GenericApi.Bl.Validations;
 using GenericApi.Core.Settings;
-using GenericApi.Model.Contexts;
+using GenericApi.Model.Entities;
 using GenericApi.Model.Repositories;
 using GenericApi.Services.Services;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System.Linq;
+using Moq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -16,70 +14,77 @@ namespace GenericApi.Services.Test
 {
     public class UserServiceTests
     {
-        private readonly IUserService _userService;
-        public UserServiceTests()
-        {
-            #region Autommaper
-
-            var mapper = new MapperConfiguration(x => x.AddProfile<MainProfile>())
-               .CreateMapper();
-
-            #endregion
-
-            #region Repository
-
-            var optionsBuilder = new DbContextOptionsBuilder<WorkShopContext>();
-            optionsBuilder.UseInMemoryDatabase("WorkShop2");
-            var context = new WorkShopContext(optionsBuilder.Options);
-
-            IUserRepository respository = new UserRepository(context);
-
-            #endregion
-
-            #region Validator
-
-            var validator = new UserValidator();
-
-            #endregion
-
-            #region Option Settings
-
-            var settings = Options.Create(new JwtSettings
-            {
-                ExpiresInMinutes = 10,
-                Secret = "0263875b-b775-4426-938c-ab7c04c74b22"
-            });
-
-            #endregion
-
-            _userService = new UserService(respository, mapper, validator, settings);
-        }
+        private IUserService _userService;
 
         [Fact]
         public async Task ShouldSaveUserAsync()
         {
-            //Arrange
-            var requestDto = new UserDto
+            #region Arrange
+
+            const string password = "Hola1234,";
+
+            var dto = new UserDto
             {
                 Name = "Emmanuel",
-                MiddleName = "Enrique",
-                LastName = "Jimenez",
-                SecondLastName = "Pimentel",
-                Dob = new System.DateTime(1996, 06, 16),
-                DocumentType = Core.Enums.DocumentType.ID,
-                DocumentTypeValue = "22500851658",
-                Gender = Core.Enums.Gender.MALE,
-                UserName = "emmanuel",
-                Password = "Hola1234,"
+                UserName = "Emma",
+                Password = password
+            };
+            var user = new User
+            {
+                Name = dto.Name,
+                UserName = dto.UserName,
+                Password = dto.Password
             };
 
+            var validatorMock = new Mock<IValidator<UserDto>>();
+            validatorMock
+                .Setup(x => x.Validate(dto))
+                .Returns(new FluentValidation.Results.ValidationResult());
+
+            var mapperMock = new Mock<IMapper>();
+            mapperMock
+                .Setup(x => x.Map<User>(It.IsAny<UserDto>()))
+               .Returns(user);
+
+            var repositoryMock = new Mock<IUserRepository>();
+            repositoryMock
+                .Setup(x => x.Add(It.IsAny<User>()))
+                .Callback<User>(x =>
+                {
+                    user.Id = 1;
+                    user.Password = x.Password;
+                })
+                .ReturnsAsync(user);
+
+            mapperMock
+                .Setup(x => x.Map(It.IsAny<User>(), It.IsAny<UserDto>()))
+                .Callback<User, UserDto>((x, y) =>
+                {
+                    dto.Id = x.Id;
+                    dto.Password = x.Password;
+                })
+                .Returns(dto);
+
+            var optionMock = new Mock<IOptions<JwtSettings>>();
+
+            _userService = new UserService(
+                repositoryMock.Object,
+                mapperMock.Object,
+                validatorMock.Object,
+                optionMock.Object
+                );
+
+            #endregion
+
             //Act
-            var result = await _userService.AddAsync(requestDto);
+            var result = await _userService.AddAsync(dto);
+
 
             //Assert
-            Assert.True(result.IsSuccess, result.Errors.FirstOrDefault());
-            Assert.NotNull(result.Entity);
-            Assert.Empty(result.Errors);
+            Assert.True(result.IsSuccess);
+            Assert.Equal(result.Entity, dto);
+            Assert.Equal(result.Entity.UserName, user.UserName);
+            Assert.NotEqual(result.Entity.Password, password);
         }
     }
 }
