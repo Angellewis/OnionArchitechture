@@ -11,6 +11,7 @@ namespace GenericApi.Bl.Validations
 		public UserValidator()
 		{
 			RuleFor(x => x.Name).NotEmpty().WithMessage("User's Name is required");
+			RuleFor(x => x.UserName).NotEmpty().WithMessage("UserName is required");
 		}
 	}
 }

@@ -88,5 +88,33 @@ namespace GenericApi.Services.Test
             Assert.NotEqual(result.Entity.Password, password);
             Assert.Equal(result.Entity.CreatedDate, user.CreatedDate);
         }
+
+        [Fact]
+        public async Task ShouldValidationFailed()
+        {
+            #region Arrange
+            var validatorMock = new Mock<IValidator<UserDto>>();
+            validatorMock.Setup(x => x.Validate(It.IsAny<UserDto>()))
+                .Returns(new UserValidator().Validate(new UserDto()));
+
+            var mapperMock = new Mock<IMapper>();
+            var repositoryMock = new Mock<IUserRepository>();
+            var optionMock = new Mock<IOptions<JwtSettings>>();
+
+            _userService = new UserService(
+                repositoryMock.Object,
+                mapperMock.Object,
+                validatorMock.Object,
+                optionMock.Object
+                );
+
+            #endregion
+
+            //Act
+            var result = await _userService.AddAsync(new UserDto());
+
+            //Assert
+            Assert.False(result.IsSuccess);
+        }
     }
 }
