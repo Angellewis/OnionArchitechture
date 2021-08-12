@@ -9,9 +9,6 @@ namespace GenericApi.Core.Abstract
         bool IsSuccess { get; }
         TDto Entity { get; set; }
         ICollection<string> Errors { get; set; }
-
-
-
     }
 
     public class EntityOperationResult<TDto> : IEntityOperationResult<TDto>

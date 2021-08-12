@@ -3,6 +3,7 @@ using GenericApi.Bl.Dto;
 using GenericApi.Model.Entities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace GenericApi.Bl.Mapper
@@ -21,7 +22,10 @@ namespace GenericApi.Bl.Mapper
             #region User
 
             CreateMap<User, UserDto>()
-                .ForMember(dto => dto.PhotoFileName, config => config.MapFrom(entity => entity.Photo.FileName));
+                .ForMember(dto => dto.PhotoFileName, config => config.MapFrom(entity => entity.Photo.FileName))
+                .ForMember(dto => dto.Signature, config => config.MapFrom(entity => $"{entity.Name.FirstOrDefault()}{entity.LastName.FirstOrDefault()}"))
+                .ForMember(dto => dto.FullName, config => config.MapFrom(entity => $"{entity.Name} {entity.LastName}"))
+                .ForMember(dto => dto.Password, config => config.Ignore());
             CreateMap<UserDto, User>();
 
             #endregion

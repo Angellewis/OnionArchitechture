@@ -19,6 +19,8 @@ namespace GenericApi.Bl.Dto
         public int? PhotoId { get; set; }
         public string PhotoFileName { get; set; }
 
+        public string Signature { get; set; }
+        public string FullName { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
         public UserRole UserRole { get; set; }

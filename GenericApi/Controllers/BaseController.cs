@@ -1,8 +1,8 @@
-﻿using GenericApi.Core.BaseModel;
+﻿using GenericApi.Api.Filters;
+using GenericApi.Core.BaseModel;
 using GenericApi.Services.Services;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Net;
@@ -12,9 +12,9 @@ namespace GenericApi.Controllers
 {
     [ApiController]
     //[Authorize]
-    [Route("[controller]")]
-    public class BaseController<TEntity,TDto> : ControllerBase
-        where TEntity : IBase 
+    [Route("api/[controller]")]
+    public class BaseController<TEntity, TDto> : ControllerBase
+        where TEntity : IBase
         where TDto : IBaseDto
     {
         protected readonly IBaseService<TEntity, TDto> _service;
@@ -22,7 +22,6 @@ namespace GenericApi.Controllers
         {
             _service = service;
         }
-
         //TODO: refactor this method to return dto
         [HttpGet]
         [EnableQuery]
@@ -33,11 +32,15 @@ namespace GenericApi.Controllers
         }
 
         [HttpGet("Query")]
+        [ODataFeature]
         public virtual async Task<IActionResult> Query(ODataQueryOptions<TEntity> queryOptions)
         {
             var query = _service.AsQuery();
+
             var odataQuery = queryOptions.ApplyTo(query).Cast<TEntity>();
+
             var result = await _service.ProjectToDto(odataQuery);
+
             return Ok(result);
         }
 
