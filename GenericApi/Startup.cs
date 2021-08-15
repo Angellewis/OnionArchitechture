@@ -27,7 +27,8 @@ namespace GenericApi
             #region App Settings
 
             services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
-
+            services.Configure<FileStoreSettings>(Configuration.GetSection("FileStoreSettings"));
+            
             #endregion
 
             #region CORS

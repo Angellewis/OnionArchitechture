@@ -22,6 +22,7 @@ namespace GenericApi.Services.Services
     public interface IUserService : IBaseService<User, UserDto>
     {
         Task<AuthenticateResponseDto> GetToken(AuthenticateRequestDto model);
+        Task<IEntityOperationResult<UserDto>> ChangePassword(int userId, ChangePasswordDto model);
     }
     public class UserService : BaseService<User, UserDto>, IUserService
     {
@@ -135,6 +136,37 @@ namespace GenericApi.Services.Services
             var token = handler.WriteToken(securityToken);
 
             return token;
+        }
+
+        public async Task<IEntityOperationResult<UserDto>> ChangePassword(int userId, ChangePasswordDto model)
+        {
+            var user = await _repository.Get(userId);
+
+            if (user is null)
+                return new EntityOperationResult<UserDto>
+                {
+                    Errors = new List<string>()
+                    {
+                       "User not fount"
+                    }
+                };
+
+            var valid = model.Password.Equals(model.ConfirmPassword);
+            
+            if(!valid)
+                return new EntityOperationResult<UserDto>
+                {
+                    Errors = new List<string>()
+                    {
+                        "Passwords does not match"
+                    }
+                };
+
+            user.Password = EncodePassword(model.Password);
+
+            await _repository.Update(user);
+
+            return new EntityOperationResult<UserDto>();
         }
     }
 }

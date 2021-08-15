@@ -17,6 +17,7 @@ namespace GenericApi.Bl.Dto
         public DocumentType DocumentType { get; set; }
         public string DocumentTypeValue { get; set; }
         public int? PhotoId { get; set; }
+        public DocumentDto Photo { get; set; }
         public string PhotoFileName { get; set; }
 
         public string Signature { get; set; }
