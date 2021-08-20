@@ -57,7 +57,7 @@ namespace GenericApi.Services.Tests.Data
             Day = 0,
             Mode = 0,
             ModeLocation = "(Salón Coliseo de Solvex - https://g.page/solvexdo?share - Calle Eugenio Deschamps 6, Santo Domingo 10133)",
-            StartHour = new TimeSpan(3, 0, 0),
+            StartHour = new DateTimeOffset(dateTime:DateTime.Now),
             EndHour = null,
             WorkShopId = 1
         };
@@ -66,7 +66,7 @@ namespace GenericApi.Services.Tests.Data
             Day = 0,
             Mode = 0,
             ModeLocation = "(Salón Coliseo de Solvex - https://g.page/solvexdo?share - Calle Eugenio Deschamps 6, Santo Domingo 10133)",
-            StartHour = new TimeSpan(3, 0, 0),
+            StartHour = new DateTimeOffset(dateTime: DateTime.Now),
             EndHour = null,
             WorkShopId = 1
         };
